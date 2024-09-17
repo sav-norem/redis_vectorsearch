@@ -21,7 +21,7 @@ schema = {
         {"name": "episodes", "type": "numeric"},
         {"name": "rating", "type": "numeric"},
         {"name": "short_description", "type": "text"},
-        # {"name": "tags", "type": "tag"},
+        {"name": "tags", "type": "tag"},
         {"name": "poster_vector", "type": "vector", 
          	"attrs": {
                  "dims": 768,
