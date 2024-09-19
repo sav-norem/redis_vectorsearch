@@ -5,7 +5,6 @@ from PIL import Image
 import redis
 import gradio as gr
 import csv
-import ast
 import urllib.request
 import pandas as pd
 

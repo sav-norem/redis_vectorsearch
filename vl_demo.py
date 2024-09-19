@@ -34,9 +34,9 @@ vectorizer = HFTextVectorizer(model="sentence-transformers/clip-ViT-L-14")
 
 data = []
 
-images = ["straws.jpg", "strawberries.jpg", "strawberries_vertical.jpg", "strawberries_growing.jpg", "strawberry_bowl.jpg", "strawberry_with_green.jpg"]
+images = ["strawberries_white_bowl_brown_background.jpg", "strawberries.jpg", "strawberries_sparse_white_background.jpg", "strawberries_growing.jpg", "strawberries_in_hands_leaf_background.jpg", "strawberries_white_background.jpg"]
 for image in images:
-    embedding = vectorizer.embed(Image.open(image), as_buffer=True)
+    embedding = vectorizer.embed(Image.open(f'strawberry_pictures/{image}'), as_buffer=True)
     datum = { 
         "image": image,
 		"embedding": embedding
@@ -46,7 +46,7 @@ for image in images:
 index.load(data)
 
 def strawberry_search(text):
-    embedding = vectorizer.embed(Image.open(image), as_buffer=True)
+    embedding = vectorizer.embed(text, as_buffer=True)
     query = VectorQuery(vector = embedding, vector_field_name = "embedding", return_fields=["image"])
     results = index.query(query)
     return results
@@ -59,7 +59,3 @@ demo = gr.Interface(
 )
 
 demo.launch()
-
-query = VectorQuery(vector = embedding, vector_field_name = "embedding")
-results = index.query(query)
-
