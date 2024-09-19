@@ -44,15 +44,15 @@ vectorizer = HFTextVectorizer(model="sentence-transformers/clip-ViT-L-14")
 genre_set = set()
 data = []
 # anime_id,Name,English name,Other name,Score,Genres,Synopsis,Type,Episodes,Aired,Premiered,Status,Producers,Licensors,Studios,Source,Duration,Rating,Rank,Popularity,Favorites,Scored By,Members,Image URL
-#df = (
-#    pd.read_csv("anime-dataset-2023.csv")
-#    .query("Type in ['TV', 'Movie']")
-#    .assign(Score=pd.to_numeric(pd.read_csv("anime-dataset-2023.csv")["Score"], errors='coerce'))
-#    .dropna(subset=["Score"])
-#    .nlargest(1010, "Score")
-#)
+df = (
+    pd.read_csv("anime-dataset-2023.csv")
+    .query("Type in ['TV', 'Movie']")
+    .assign(Score=pd.to_numeric(pd.read_csv("anime-dataset-2023.csv")["Score"], errors='coerce'))
+    .dropna(subset=["Score"])
+    .nlargest(1010, "Score")
+)
 
-#df.to_csv("anime-sorted.csv", index=False)
+df.to_csv("anime-sorted.csv", index=False)
 
 with open("anime-sorted.csv", "r") as f:
     reader = csv.reader(f)
