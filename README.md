@@ -5,8 +5,9 @@ Using the RedisVL library, I'm building out a simple vector search demo.
 ### Usage
 If you want to run `vl_demo_anime`, you'll need to 
 1. Get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) since I ain't about to get in trouble for redistributing that data (but all it requires is an email to download)
-2. Run `poetry install`
-3. Run `python vl_demo_anime.py`
+2. Clone this repository
+3. Run `poetry install`
+4. Run `python vl_demo_anime.py`
 
 This demo takes a bit to load at the moment and has a print statement mostly for entertainment / progress purpose. If you'd rather stare at an empty terminal while dtaa gets loaded, you're more than welcome to take out the print statement. Regardless, at the moment this demo takes a bit of setup time.
 
