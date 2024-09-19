@@ -7,6 +7,7 @@ import gradio as gr
 import csv
 import urllib.request
 import pandas as pd
+import os
 
 # Create a Redis connection
 r = redis.Redis(host='localhost', port=6379, db=0)
@@ -53,6 +54,10 @@ df = (
 )
 
 df.to_csv("anime-sorted.csv", index=False)
+if not os.path.exists('./anime_images'):
+    os.mkdir("anime_images")
+else:
+    pass
 
 with open("anime-sorted.csv", "r") as f:
     reader = csv.reader(f)
@@ -88,7 +93,7 @@ r.sadd("tag_set", *genre_set)
 
 
 with gr.Blocks() as demo:
-    search_term = gr.Textbox(label="Search the top 100 anime by their posters")
+    search_term = gr.Textbox(label="Search the top 1,000 anime by their posters")
     search_results = gr.Textbox(label="Closest Anime (by poster search)")
     poster = gr.Image(label="Closest Anime Poster")
 
