@@ -1,8 +1,6 @@
 import redis
-import docker
 from load_anime_data import *
 from run_demo import *
-import time
 from sys import argv
 
 def main(load_flag = True, demo_flag = True):

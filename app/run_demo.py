@@ -2,7 +2,6 @@ import gradio as gr
 from redisvl.utils.vectorize import HFTextVectorizer
 from redisvl.query import VectorQuery
 from redisvl.index import SearchIndex
-import redis
 from PIL import Image
 
 def run_demo(r):
