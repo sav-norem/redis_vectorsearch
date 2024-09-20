@@ -3,12 +3,12 @@
 Using the RedisVL library, I'm building out a simple vector search demo. 
 
 ### Usage
-If you want to run `vl_demo_anime`, you'll need to 
+If you want to run the search over anime posters, you'll need to 
 1. Have a Redis connection
 2. Get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) since I ain't about to get in trouble for redistributing that data (but all it requires is an email to download) and put it in the project folder*
 3. Clone this repository
 4. Run `poetry install`
-5. Run `python app/vl_demo_anime.py`
+5. Run `python app/app.py`
 
 * You may find it's easier for you to put the datafile elsewhere, just note that you'll need to adjust where `load_anime_data.py` looks for this file.
 
