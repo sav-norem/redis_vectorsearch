@@ -32,6 +32,8 @@ To connect to Redis you have options. The route I took was to run Redis from doc
 #### Notes
 This demo takes a bit to load and has a print statement mostly for entertainment / progress purpose. If you'd rather stare at an empty terminal while data gets loaded, you're more than welcome to take out the print statement. Regardless, parsing this data, getting the images, vectorizing them and loading them, takes a bit of time.
 
+Another important note is that the current RedisVL library only supports text embeddings, which means teh RedisVL you're getting with `poetry install` has one key change. I took out an assertion that the input was a string. This means if you swap to a different model, you may end up with unexpected errors. In fact to cause minimal impact, I only took it out for the HuggingFace specific vectorizer. The RedisVL library is still in development, and they're working on support for embedding other data types. This project will be updated to use the actual [RedisVL](https://github.com/redis/redis-vl-python) library as soon as the functionality is available, as it will continue to gain new features and support.
+
 Features I'm planning to add:
 1. ~~Refactor to separate the data loader and the demo runner~~
 2. Search over synopsis and title as well as image
