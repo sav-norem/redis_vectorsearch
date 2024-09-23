@@ -36,7 +36,7 @@ data = []
 
 images = ["strawberries_white_bowl_brown_background.jpg", "strawberries.jpg", "strawberries_sparse_white_background.jpg", "strawberries_growing.jpg", "strawberries_in_hands_leaf_background.jpg", "strawberries_white_background.jpg"]
 for image in images:
-    embedding = vectorizer.embed(Image.open(f'{image}'), as_buffer=True)
+    embedding = vectorizer.embed(Image.open(f'old_versions/{image}'), as_buffer=True)
     datum = { 
         "image": image,
 		"embedding": embedding
