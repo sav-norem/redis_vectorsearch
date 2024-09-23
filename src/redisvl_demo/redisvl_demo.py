@@ -1,15 +1,18 @@
 import redis
-from load_anime_data import *
-from run_demo import *
+from load_anime_data import DataLoader
+from run_demo import Demo
 from sys import argv
+
 
 def main(load_flag = True, demo_flag = True):
     r = redis.Redis(host='localhost', port=6379, db=0)
     if load_flag:
-        load_data(r)
+        loader = DataLoader(r)
+        loader.parse_data()
+        loader.load_data()
     if demo_flag:
-        run_demo(r)
-
+        demo = Demo(r)
+        demo.run_demo()
 
 if __name__ == "__main__":
     demo_flag, load_flag = True, True

@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "A demonstration of using RedisVL to do vectorsearch"
 authors = ["savynorem <savannah.norem@redis.com>"]
 license = "MIT"
+repository = "https://github.com/sav-norem/redis_vectorsearch"
+packages = [{include = "redisvl_demo", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -15,6 +17,7 @@ gradio = "^4.44.0"
 pandas = "^2.2.2"
 sentence-transformers = "^3.1.1"
 docker = "^7.1.0"
+pytest = "^8.3.3"
 
 [tool.poetry.dev-dependencies]
 
