@@ -11,9 +11,10 @@ For me and my environment, running this from scratch looks like:
 1. `git clone https://github.com/sav-norem/redis_vectorsearch.git`
 2. `CD redis_vectorsearch`
 3. `python3 -m venv .`
-4. `poetry install`
-5. Put `anime-dataset-2023.csv` in this folder
-6. `python3 src/redisvl_demo/redisvl_demo.py`
+4. `source bin/activate`
+5. `poetry install`
+6. Put `anime-dataset-2023.csv` in this folder
+7. `python3 src/redisvl_demo/redisvl_demo.py`
 
 This will bring up a link to the local website where you can now search using text over the top ~1,000 anime posters.
 

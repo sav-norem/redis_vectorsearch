@@ -10,6 +10,8 @@ import urllib.request
 
 class DataLoader:
     def __init__(self, r, initial_data_file="anime-dataset-2023.csv", parsed_data_file="anime-sorted.csv", index_name="anime_demo"):
+        # This class assumes data that needs to be parsed
+        # however parse_data can be skipped if the data is already in the correct format amd passed in as the parsed_data_file
         self.r = r
         self.initial_data = initial_data_file
         self.parsed_data_file = parsed_data_file
@@ -38,12 +40,18 @@ class DataLoader:
                 }
             ]
         }
-        self.index = SearchIndex.from_dict(self.schema)
+        try:
+            self.index = SearchIndex.from_dict(self.schema)
+        except:
+            # If the index doesn't exist, kick out
+            print("Index not found. Exiting.")
+            return
         self.index.set_client(r)
         self.index.create(overwrite=True, drop=True)
         self.vectorizer = HFTextVectorizer(model="sentence-transformers/clip-ViT-L-14")
 
     def parse_data(self):
+        # This function parses the initial data file and filters out the top 1010 TV and Movie entries with a valid score
         df = (
             pd.read_csv(self.initial_data)
             .query("Type in ['TV', 'Movie']")
@@ -55,6 +63,7 @@ class DataLoader:
         df.to_csv(self.parsed_data_file, index=False)
 
     def load_data(self, test_flag=False):
+        # This function loads the parsed data into the RedisVL index, along with a set of genres
         genre_set = set()
         data = []
         with open(self.parsed_data_file, "r") as f:

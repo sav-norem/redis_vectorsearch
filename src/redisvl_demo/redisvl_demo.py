@@ -5,6 +5,7 @@ from sys import argv
 
 
 def main(load_flag = True, demo_flag = True):
+    # This function initializes the Redis connection and runs the data loading and demo functions
     r = redis.Redis(host='localhost', port=6379, db=0)
     if load_flag:
         loader = DataLoader(r)

@@ -19,6 +19,7 @@ class Demo:
         self.vectorizer = HFTextVectorizer(model="sentence-transformers/clip-ViT-L-14")
 
     def run_demo(self):
+        # This function runs the Gradio demo
         with gr.Blocks() as demo:
             search_term = gr.Textbox(label="Search the top 1,000 anime by their posters")
             search_results = gr.Textbox(label="Closest Anime (by poster search)")
@@ -28,7 +29,9 @@ class Demo:
         demo.launch()
 
     def vector_search(self, search_text):
+        # This function takes a search term, vectorizes it, and queries the RedisVL index for the closest anime poster
         embedding = self.vectorizer.embed(search_text, as_buffer=True)
         query = VectorQuery(vector = embedding, vector_field_name = "poster_vector", return_fields=["title", "image_path"])
         results = self.index.query(query)
+        # Currently only returns the top result
         return results[0]['title'], Image.open(results[0]['image_path'])
