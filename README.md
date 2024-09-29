@@ -1,9 +1,9 @@
 # A Redis Vector Search Demo
 
-Using the RedisVL library, I'm building out a simple vector search demo. 
+Using the RedisVL library, I'm building out a simple vector search demo. I'll be taking a dataset of anime from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) and vectorizing both the main poster image and the description. I'll then be able to search over the dataset using text and see either the closest image or the closest description to the text I entered.
 
 ### Usage
-If you want to run the search over anime posters, you'll need to first get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) since I ain't about to get in trouble for redistributing that data (but all it requires is an email to download, and I have included the test data which is the first 10 rows) and put it in the project folder*
+If you want to run the search over anime posters, you'll need to first get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) - it requires is an email to download, but it's free. 
 
 You'll also need a Redis connection, with the two easiest options presented below.
 
