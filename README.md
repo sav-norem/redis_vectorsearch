@@ -3,7 +3,7 @@
 Using the RedisVL library, I'm building out a simple vector search demo. I'll be taking a dataset of anime from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) and vectorizing both the main poster image and the description. I'll then be able to search over the dataset using text and see either the closest image or the closest description to the text I entered.
 
 ### Usage
-If you want to run the search over anime posters, you'll need to first get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) - it requires is an email to download, but it's free. 
+If you want to run the search over anime posters, you'll need to first get the anime dataset for yourself from [Kaggle](https://www.kaggle.com/code/yasminebenj/anime-reviews) - it requires is an email to download, but it's free.
 
 You'll also need a Redis connection, with the two easiest options presented below.
 
@@ -13,12 +13,11 @@ For me and my environment, running this from scratch looks like:
 3. `python3 -m venv .`
 4. `source bin/activate`
 5. `poetry install`
-6. Put `anime-dataset-2023.csv` in this folder
+6. Put `anime-dataset-2023.csv` (the file you downloaded from Keggle) in the same folder as the `poetry.lock` file
 7. `python3 src/redisvl_demo/redisvl_demo.py`
 
 This will bring up a link to the local website where you can now search using text over the top ~1,000 anime posters.
 
-*You may find it's easier for you to put the datafile elsewhere, just note that you'll need to adjust where DataLoader looks for this file.
 
 ### Basics
 This project has a `DataLoader` and a `Demo`. The `DataLoader` will take optional arguments for both an initial file and a parsed file path. If you're doing this with the same data I did, you won't need to change anything. However if you want to swap out data, change file paths, etc. both of these inputs will need to change. You can do so in `redisvl_demo.py` on the initialization of `DataLoader`. Both `Demo` and `DataLoader` will take an optional argument for an `index_name`. Again, if you're not trying to change up the data or do your own testing, you can leave this alone. They both also take a Redis connection, meaning `redisvl_demo.py` is where you'll need to change that if you want to use anything other than `r = redis.Redis(host='localhost', port=6379, db=0)`.
@@ -32,7 +31,7 @@ To connect to Redis you have options. The route I took was to run Redis from doc
 #### Notes
 This demo takes a bit to load and has a print statement mostly for entertainment / progress purpose. If you'd rather stare at an empty terminal while data gets loaded, you're more than welcome to take out the print statement. Regardless, parsing this data, getting the images, vectorizing them and loading them, takes a bit of time.
 
-Another important note is that the current RedisVL library only supports text embeddings, which means teh RedisVL you're getting with `poetry install` has one key change. I took out an assertion that the input was a string. This means if you swap to a different model, you may end up with unexpected errors. In fact to cause minimal impact, I only took it out for the HuggingFace specific vectorizer. The RedisVL library is still in development, and they're working on support for embedding other data types. This project will be updated to use the actual [RedisVL](https://github.com/redis/redis-vl-python) library as soon as the functionality is available, as it will continue to gain new features and support.
+The `vector_extend` file overwrites the HuggingFace embed function to allow for images. I'm currently using two different models, one for the images and one for the synopsis. While `sentence-transformers/clip-ViT-L-14` is multi-modal and can be used for text, the limit for tokens was too low to vectorize the entire synopsis. I'll definitely be exploring other models for these purposes and seeing how they impact the search results.
 
 Features I'm planning to add:
 1. ~~Refactor to separate the data loader and the demo runner~~
