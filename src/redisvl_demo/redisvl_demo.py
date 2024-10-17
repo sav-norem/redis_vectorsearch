@@ -16,9 +16,6 @@ def main(load_flag = True, demo_flag = True):
         search_ui.run_search_ui()
 
 if __name__ == "__main__":
-    #parser.add_argument('--load-data', '-l', nargs=2) # if data path provided, load that file, don't parse it (should this include the schema?)
-    #parser.add_argument('--start', '-s')
-
     load_flag = True
     demo_flag = True
     if len(argv) == 2:

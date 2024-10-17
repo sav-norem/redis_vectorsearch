@@ -52,7 +52,6 @@ class DataLoader:
             os.makedirs("anime_images")
         df.rename(columns={"Name": "title", "English name": "english_name", "Score": "rating", "Genres": "genres", "Synopsis": "synopsis", "Image URL": "image_url", "Rank": "popularity_rank"}, inplace=True)
         df["index"] = df.index
-        # df["episodes"] = df["episodes"].replace("UNKNOWN", 0)
         df["image_path"] = df["index"].apply(lambda idx: f"anime_images/{idx}.jpg")
         df["poster_vector"] = None
         for index, val in df['image_url'].items():
@@ -68,6 +67,5 @@ class DataLoader:
         df["description_vector"] = df["synopsis"].apply(lambda x: self.txt_vectorizer.embed(x, as_buffer=True))
         df = df[["title", "english_name", "rating", "synopsis", "genres", "popularity_rank", "image_path", "index", "poster_vector", "description_vector"]]
         df = df.dropna(subset=["poster_vector", "description_vector"])
-        print(type(df.to_dict(orient="records")[0]["description_vector"]))
         keys_loaded = self.index.load(df.to_dict(orient="records"))
         logging.info(len(keys_loaded))
