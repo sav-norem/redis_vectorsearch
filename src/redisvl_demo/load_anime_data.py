@@ -54,20 +54,20 @@ class DataLoader:
         df["index"] = df.index
         # df["episodes"] = df["episodes"].replace("UNKNOWN", 0)
         df["image_path"] = df["index"].apply(lambda idx: f"anime_images/{idx}.jpg")
-        df["poster_embedding"] = None
+        df["poster_vector"] = None
         for index, val in df['image_url'].items():
             try:
                 urllib.request.urlretrieve(val, f"anime_images/{index}.jpg")
                 image = Image.open(f'anime_images/{index}.jpg')
                 embedding = self.img_vectorizer.embed(image, as_buffer=True)
-                df.at[index, 'poster_embedding'] = embedding
+                df.at[index, 'poster_vector'] = embedding
             except Exception as e:
                 logging.error(f"Failed to process image at index {index}: {e}")
                 continue
 
-        df["description_embedding"] = df["synopsis"].apply(lambda x: self.txt_vectorizer.embed(x, as_buffer=True))
-        df = df[["title", "english_name", "rating", "synopsis", "genres", "popularity_rank", "image_path", "index", "poster_embedding", "description_embedding"]]
-        df = df.dropna(subset=["poster_embedding", "description_embedding"])
-        print(type(df.to_dict(orient="records")[0]["description_embedding"]))
+        df["description_vector"] = df["synopsis"].apply(lambda x: self.txt_vectorizer.embed(x, as_buffer=True))
+        df = df[["title", "english_name", "rating", "synopsis", "genres", "popularity_rank", "image_path", "index", "poster_vector", "description_vector"]]
+        df = df.dropna(subset=["poster_vector", "description_vector"])
+        print(type(df.to_dict(orient="records")[0]["description_vector"]))
         keys_loaded = self.index.load(df.to_dict(orient="records"))
         logging.info(len(keys_loaded))
