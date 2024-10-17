@@ -1,4 +1,4 @@
-{
+schema = {
     "index": {
         "name": "anime_demo",
         "prefix": "anime"
@@ -12,6 +12,7 @@
         {"name": "genres", "type": "tag"},
         {"name": "popularity_rank", "type": "numeric"},
         {"name": "image_path", "type": "text"},
+        {"name": "index", "type": "numeric"},
         {"name": "poster_vector", "type": "vector", 
             "attrs": {
                 "dims": 768,

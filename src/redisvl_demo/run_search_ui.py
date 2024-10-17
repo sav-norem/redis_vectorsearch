@@ -7,25 +7,26 @@ from redisvl.query.filter import Tag
 import sys
 import requests
 from vector_extend import HF_Images
+import logging
 
-class Demo:
+class SearchUI:
     def __init__(self, redis, index_name="anime_demo"):
         self.redis = redis
         self.index_name = index_name
         try:
             self.index = SearchIndex.from_existing(self.index_name, redis_client=self.redis)
         except:
-            print("Index not found. Exiting.")
+            logging.critical("Index not found. Exiting.")
             sys.exit(1)
         self.index.set_client(self.redis)
         self.img_vectorizer = HF_Images(model="sentence-transformers/clip-ViT-L-14")
         self.txt_vectorizer = HF_Images(model="all-MiniLM-L6-v2")
-        self.genres = redis.smembers("tag_set")
-        self.genres.add("All")
+        genres = redis.smembers("tag_set")
+        self.genres = [genre.decode("utf-8") for genre in genres]
         self.results = []
         self.result_index = 0
 
-    def run_demo(self):
+    def run_search_ui(self):
         # This function runs the Gradio UI
         with gr.Blocks() as demo:
             search_term = gr.Textbox(label="Search the top 1,000 anime by their posters")
@@ -48,21 +49,29 @@ class Demo:
         else:
             vector_field = "poster_vector"
             search_embedding = self.img_vectorizer.embed(search_text, as_buffer=True)
+        
         query = VectorQuery(vector = search_embedding, vector_field_name = vector_field, return_fields=["title", "image_path", "synopsis"])
+        logging.debug(query)
         self.results = self.index.query(query)
-        print(len(self.results))
-        print(self.results)
+        logging.debug(len(self.results))
+        logging.debug(self.results)
         if len(self.results) > 0:
             return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+        else:
+            raise gr.Error("No results found")
     
     def next_result(self):
         # This function returns the next result from the RedisVL query
         self.result_index += 1
         if len(self.results) > 1:
             return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+        else:
+            raise gr.Error("No results found")
         
     def last_result(self):
         # This function retrieves the last result from the RedisVL query
         self.result_index -= 1
         if len(self.results) > 1:
             return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+        else:
+            raise gr.Error("No results found")
