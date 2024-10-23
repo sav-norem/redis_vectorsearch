@@ -13,7 +13,7 @@ from vector_extend import HF_Images
 import logging
 
 class DataLoader:
-    def __init__(self, redis, initial_data_file="anime-test.csv", index_name="anime_demo", anime_limit=1000):
+    def __init__(self, redis, initial_data_file, index_name, limit, image_path):
         # This class assumes data that needs to be parsed
         # however parse_data can be skipped if the data is already in the correct format amd passed in as the parsed_data_file
         self.redis = redis
@@ -28,7 +28,8 @@ class DataLoader:
         self.index.create(overwrite=True, drop=True)
         self.img_vectorizer = HF_Images(model="sentence-transformers/clip-ViT-L-14")
         self.txt_vectorizer = HF_Images(model="all-MiniLM-L6-v2")
-        self.anime_limit = anime_limit
+        self.anime_limit = limit
+        self.image_path = image_path
 
 
     def load_data(self):
@@ -48,22 +49,23 @@ class DataLoader:
         )
         if self.anime_limit:
             df = df.nlargest(self.anime_limit, "Score")
-        if not os.path.exists("anime_images"):
-            os.makedirs("anime_images")
+        if not os.path.exists(self.image_path):
+            os.makedirs(self.image_path)
         df.rename(columns={"Name": "title", "English name": "english_name", "Score": "rating", "Genres": "genres", "Synopsis": "synopsis", "Image URL": "image_url", "Rank": "popularity_rank"}, inplace=True)
         df["index"] = df.index
-        df["image_path"] = df["index"].apply(lambda idx: f"anime_images/{idx}.jpg")
+        df["image_path"] = df["index"].apply(lambda idx: f"{self.image_path}/{idx}.jpg")
         df["poster_vector"] = None
         for index, val in df['image_url'].items():
             try:
-                urllib.request.urlretrieve(val, f"anime_images/{index}.jpg")
-                image = Image.open(f'anime_images/{index}.jpg')
+                urllib.request.urlretrieve(val, f"{self.image_path}/{index}.jpg")
+                image = Image.open(f'{self.image_path}/{index}.jpg')
                 embedding = self.img_vectorizer.embed(image, as_buffer=True)
                 df.at[index, 'poster_vector'] = embedding
             except Exception as e:
                 logging.error(f"Failed to process image at index {index}: {e}")
                 continue
 
+        print(df.head())
         df["description_vector"] = df["synopsis"].apply(lambda x: self.txt_vectorizer.embed(x, as_buffer=True))
         df = df[["title", "english_name", "rating", "synopsis", "genres", "popularity_rank", "image_path", "index", "poster_vector", "description_vector"]]
         df = df.dropna(subset=["poster_vector", "description_vector"])

@@ -10,7 +10,7 @@ from vector_extend import HF_Images
 import logging
 
 class SearchUI:
-    def __init__(self, redis, index_name="anime_demo"):
+    def __init__(self, redis, index_name):
         self.redis = redis
         self.index_name = index_name
         try:
@@ -31,10 +31,9 @@ class SearchUI:
         with gr.Blocks() as demo:
             search_term = gr.Textbox(label="Search the top 1,000 anime by their posters")
             search_target = gr.Radio(choices=["Poster", "Description"])
-            search_results = gr.Textbox(label="Closest Anime (by poster search)")
+            search_results = gr.Textbox(label="Closest Anime")
             poster = gr.Image(label="Closest Anime Poster")
             synopsis = gr.Textbox(label="Synopsis")
-            index = gr.Textbox(label="Index")
             gr.Button("Search").click(fn=self.vector_search, inputs=[search_term, search_target], outputs=[search_results, poster, synopsis, index])
             gr.Button("Next").click(fn=self.next_result, inputs=[], outputs=[search_results, poster, synopsis, index])
             gr.Button("Back").click(fn=self.last_result, inputs=[], outputs=[search_results, poster, synopsis, index])
@@ -51,10 +50,9 @@ class SearchUI:
             search_embedding = self.img_vectorizer.embed(search_text, as_buffer=True)
         
         query = VectorQuery(vector = search_embedding, vector_field_name = vector_field, return_fields=["title", "image_path", "synopsis"])
-        logging.debug(query)
+        logging.debug(f"The query sent to Redis was {query}")
         self.results = self.index.query(query)
-        logging.debug(len(self.results))
-        logging.debug(self.results)
+        logging.debug(f"The number of items returned from the query was {len(self.results)}")
         if len(self.results) > 0:
             return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
         else:
