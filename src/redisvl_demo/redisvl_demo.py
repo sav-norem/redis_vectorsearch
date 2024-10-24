@@ -13,6 +13,7 @@ def create_arg_parser():
     parser.add_argument('-imagepath', help="Path to save images. Default: anime_images", default='anime_images')
     parser.add_argument('-indexname', help="Name of the index to create. Default: anime_demo", default='anime_demo')
     parser.add_argument('-redisconnection', nargs=2, help="Redis connection details (host and port). Default: localhost:6379", default=['localhost', 6379])
+    parser.add_argument('-noload', help="Don't load any data, assumes data can be found at index name.", default=False)
     return parser
         
 def main():
@@ -25,14 +26,15 @@ def main():
 
     # Dataloader needs: redis connection, initial_data_file, index_name, anime_limit
     # SearchUI needs: redis connection, index_name
-    loader = DataLoader(
-        r,
-        initial_data_file=args.loadfile,
-        index_name=args.indexname,
-        limit=args.limit,
-        image_path=args.imagepath
-    )
-    loader.load_data()
+    if not args.noload:
+        loader = DataLoader(
+            r,
+            initial_data_file=args.loadfile,
+            index_name=args.indexname,
+            limit=args.limit,
+            image_path=args.imagepath
+        )
+        loader.load_data()
 
     search_ui = SearchUI(r, index_name=args.indexname)
     search_ui.run_search_ui()

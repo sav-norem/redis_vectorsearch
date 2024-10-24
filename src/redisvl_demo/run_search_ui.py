@@ -34,9 +34,9 @@ class SearchUI:
             search_results = gr.Textbox(label="Closest Anime")
             poster = gr.Image(label="Closest Anime Poster")
             synopsis = gr.Textbox(label="Synopsis")
-            gr.Button("Search").click(fn=self.vector_search, inputs=[search_term, search_target], outputs=[search_results, poster, synopsis, index])
-            gr.Button("Next").click(fn=self.next_result, inputs=[], outputs=[search_results, poster, synopsis, index])
-            gr.Button("Back").click(fn=self.last_result, inputs=[], outputs=[search_results, poster, synopsis, index])
+            gr.Button("Search").click(fn=self.vector_search, inputs=[search_term, search_target], outputs=[search_results, poster, synopsis])
+            gr.Button("Next").click(fn=self.next_result, inputs=[], outputs=[search_results, poster, synopsis])
+            gr.Button("Back").click(fn=self.last_result, inputs=[], outputs=[search_results, poster, synopsis])
 
         demo.launch()
 
@@ -54,7 +54,7 @@ class SearchUI:
         self.results = self.index.query(query)
         logging.debug(f"The number of items returned from the query was {len(self.results)}")
         if len(self.results) > 0:
-            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"]
         else:
             raise gr.Error("No results found")
     
@@ -62,7 +62,7 @@ class SearchUI:
         # This function returns the next result from the RedisVL query
         self.result_index += 1
         if len(self.results) > 1:
-            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"]
         else:
             raise gr.Error("No results found")
         
@@ -70,6 +70,6 @@ class SearchUI:
         # This function retrieves the last result from the RedisVL query
         self.result_index -= 1
         if len(self.results) > 1:
-            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"], self.result_index
+            return self.results[self.result_index]["title"], Image.open(self.results[self.result_index]['image_path']), self.results[self.result_index]["synopsis"]
         else:
             raise gr.Error("No results found")
